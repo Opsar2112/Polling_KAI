@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sistem Evaluasi Kepuasan Pengajar PT KAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --kai-blue: #2f2a78;
+        --kai-orange: #f37021;
+        --light-bg: #f3f4f6;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: var(--light-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card {
+        width: 420px;
+        background: #ffffff;
+        padding: 50px 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        text-align: center;
+      }
+
+      .logo-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .logo-group img {
+        max-height: 55px;
+      }
+
+      .divider {
+        width: 2px;
+        height: 45px;
+        background: #ddd;
+      }
+
+      .title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        color: var(--kai-blue);
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        border-radius: 12px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 15px;
+      }
+
+      .peserta {
+        background: var(--kai-orange);
+        color: white;
+      }
+
+      .peserta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(243, 112, 33, 0.4);
+      }
+
+      .admin {
+        background: var(--kai-blue);
+        color: white;
+      }
+
+      .admin:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(47, 42, 120, 0.3);
+      }
+
+      .kembali {
+        background: #9ca3af;
+        color: white;
+      }
+
+      .kembali:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+      }
+
+      .footer {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #888;
+      }
+
+      @media (max-width: 500px) {
+        .card {
+          width: 90%;
+          padding: 40px 25px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="logo-group">
+        <img src="kai.png" alt="Logo KAI" />
+        <div class="divider"></div>
+        <img src="operation.png" alt="Operation Safety Academy" />
+      </div>
+
+      <div class="title">Silakan Pilih Akses</div>
+
+      <button class="peserta" onclick="masukPeserta()">Izin IB untuk Sabtu Minggu</button>
+      <button class="admin" onclick="tampilkanAdmin()">Konfirmasi Kedatangan Siswa</button>
+      <button class="kembali" onclick="kembali()">Kembali</button>
+
+      <div class="footer">Agus Suroto Corporate University</div>
+    </div>
+
+    <script>
+      function masukPeserta() {
+        window.location.href = "peserta.html";
+      }
+
+      function tampilkanAdmin() {
+        window.location.href = "peserta2.html";
+      }
+
+      function kembali() {
+        window.location.href = "index.html";
+        // ganti sesuai halaman tujuan Anda
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Evaluasi Pengajar</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --kai-blue: #2f2a78;
+        --kai-dark: #1a1660;
+        --kai-orange: #f37021;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f3f4f6;
+        padding: 40px 20px;
+      }
+
+      /* HEADER */
+      .header-wrapper {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 40px;
+        margin-bottom: 35px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        border-bottom: 4px solid var(--kai-orange);
+      }
+
+      .header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-left img {
+        height: 60px;
+      }
+      .logo-right img {
+        height: 50px;
+      }
+
+      .header-center {
+        text-align: center;
+        flex: 1;
+      }
+
+      .header-center h1 {
+        margin: 0;
+        color: var(--kai-blue);
+        font-size: 28px;
+      }
+
+      .header-center p {
+        margin: 5px 0 0;
+        font-size: 14px;
+        color: #555;
+      }
+
+      /* CONTAINER */
+      .container {
+        max-width: 1100px;
+        margin: auto;
+      }
+
+      /* CARD */
+      .card {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      }
+
+      h3 {
+        margin: 0;
+        color: var(--kai-blue);
+      }
+
+      select {
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 10px;
+        width: 300px;
+        border: 1px solid #ddd;
+        font-family: "Poppins";
+      }
+
+      canvas {
+        margin-top: 20px;
+      }
+
+      canvas {
+        min-height: 550px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #444;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <div class="header-wrapper">
+        <div class="header-inner">
+          <div class="logo-left">
+            <img src="kai.png" alt="Logo KAI" />
+          </div>
+
+          <div class="header-center">
+            <h1>Dashboard Hasil Poling</h1>
+            <p>Rekap Hasil Poling<br />Agus Suroto Corporate University</p>
+          </div>
+
+          <div class="logo-right">
+            <img src="operation.png" alt="Operation Safety Academy" />
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTAL -->
+      <div class="card">
+        <h3>Total Responden: <span id="total">0</span></h3>
+      </div>
+
+      <div class="card">
+        <h3>Pilih Jenis Polling</h3>
+        <select id="sheetSelector">
+          <option value="DATA_IB">Polling IB</option>
+          <option value="DATA_KEHADIRAN">Polling Kehadiran</option>
+        </select>
+        <div class="card">
+          <h3>Filter Data</h3>
+
+          <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
+            <div>
+              <label>Nama Diklat</label><br />
+              <select id="filterDiklat">
+                <option value="ALL">Semua Diklat</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Kedudukan</label><br />
+              <select id="filterKedudukan">
+                <option value="ALL">Semua Kedudukan</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="card">
+        <canvas id="chart"></canvas>
+      </div>
+
+      <div class="footer">Agus Suroto Corporate University</div>
+    </div>
+
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxajOz4wGxvjtNfABvYTMbKS9l94AEFt6kHnzH5kWrAjMUmSpOulWTiZhUPPVnNEeGb/exec";
+
+      let chartInstance = null;
+
+      const selector = document.getElementById("sheetSelector");
+      selector.addEventListener("change", loadData);
+      // 🔹 LOAD MASTER DIKLAT
+      fetch(`${scriptURL}?sheet=MASTER_DIKLAT`)
+        .then((res) => res.json())
+        .then((data) => {
+          const select = document.getElementById("filterDiklat");
+
+          data.forEach((row) => {
+            let opt = document.createElement("option");
+            opt.value = row["Nama Diklat"];
+            opt.textContent = row["Nama Diklat"];
+            select.appendChild(opt);
+          });
+        });
+
+      // 🔹 LOAD MASTER KEDUDUKAN
+      fetch(`${scriptURL}?sheet=MASTER_KEDUDUKAN`)
+        .then((res) => res.json())
+        .then((data) => {
+          const select = document.getElementById("filterKedudukan");
+
+          data.forEach((row) => {
+            let opt = document.createElement("option");
+            opt.value = row["Kedudukan"];
+            opt.textContent = row["Kedudukan"];
+            select.appendChild(opt);
+          });
+        });
+
+      // Load pertama kali
+      loadData();
+
+      function loadData() {
+        const selectedSheet = selector.value;
+
+        fetch(`${scriptURL}?sheet=${selectedSheet}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              alert(data.error);
+              return;
+            }
+
+            document.getElementById("total").innerText = data.length;
+
+            let rekap = {};
+
+            data.forEach((row) => {
+              const keys = Object.keys(row);
+              const jawaban = row[keys[keys.length - 1]];
+
+              if (!rekap[jawaban]) {
+                rekap[jawaban] = 0;
+              }
+
+              rekap[jawaban]++;
+            });
+
+            const labels = Object.keys(rekap);
+            const values = Object.values(rekap);
+
+            const ctx = document.getElementById("chart").getContext("2d");
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    data: values,
+                    backgroundColor: ["#f37021", "#2f2a78", "#1565c0", "#009688"],
+                    borderRadius: 12,
+                  },
+                ],
+              },
+              plugins: [ChartDataLabels],
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                  datalabels: {
+                    anchor: "end",
+                    align: "end",
+                    color: "#000",
+                    font: { weight: "bold" },
+                  },
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 },
+                  },
+                },
+              },
+            });
+          })
+          .catch((err) => {
+            console.error("Gagal mengambil data:", err);
+          });
+      }
+
+      document.getElementById("filterDiklat").addEventListener("change", renderChart);
+      document.getElementById("filterAngkatan").addEventListener("change", renderChart);
+
+      function renderChart() {
+        const selectedDiklat = document.getElementById("filterDiklat").value;
+        const selectedAngkatan = document.getElementById("filterAngkatan").value;
+
+        let rekap = {};
+
+        globalData.forEach((row) => {
+          if (selectedDiklat !== "ALL" && row.nama_diklat !== selectedDiklat) return;
+          if (selectedAngkatan !== "ALL" && row.angkatan !== selectedAngkatan) return;
+          if (!row.pengajar_final) return;
+
+          if (!rekap[row.pengajar_final]) {
+            rekap[row.pengajar_final] = { total: 0, count: 0 };
+          }
+
+          let nilaiList = [row.nilai_pengetahuan, row.nilai_penjelasan, row.nilai_partisipasi, row.nilai_tanya_jawab, row.nilai_waktu, row.nilai_kelas, row.nilai_struktur, row.nilai_motivasi, row.nilai_media, row.nilai_evaluasi];
+
+          let totalNilai = 0;
+          let jumlah = 0;
+
+          nilaiList.forEach((n) => {
+            let angka = convertNilai(n);
+            if (angka > 0) {
+              totalNilai += angka;
+              jumlah++;
+            }
+          });
+
+          if (jumlah > 0) {
+            rekap[row.pengajar_final].total += totalNilai / jumlah;
+            rekap[row.pengajar_final].count += 1;
+          }
+        });
+
+        let labels = [];
+        let values = [];
+        let colors = [];
+
+        for (let k in rekap) {
+          let rata = rekap[k].total / rekap[k].count;
+          labels.push(k);
+          values.push(rata.toFixed(2));
+
+          // 🔵 Biru jika kurang dari 3.5
+          if (rata < 3.5) {
+            colors.push("#1565c0");
+          } else {
+            colors.push("#f37021");
+          }
+        }
+
+        const ctx = document.getElementById("chart").getContext("2d");
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                data: values,
+                backgroundColor: colors,
+                borderRadius: 12,
+                barThickness: 28,
+              },
+            ],
+          },
+          plugins: [ChartDataLabels],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                top: 40, // tambah ruang atas supaya angka tidak terpotong
+                right: 20,
+                left: 20,
+                bottom: 10,
+              },
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "#2f2a78",
+                titleColor: "#fff",
+                bodyColor: "#fff",
+              },
+              datalabels: {
+                anchor: "end",
+                align: "end",
+                offset: -4, // geser sedikit turun agar tidak mentok
+                clamp: true, // cegah keluar area
+                clip: false, // ⬅ INI PENTING supaya tidak terpotong
+                color: "#000",
+                font: {
+                  weight: "bold",
+                  size: 12,
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 5,
+                ticks: { stepSize: 0.5 },
+              },
+              x: {
+                ticks: {
+                  maxRotation: 45,
+                  minRotation: 45,
+                  autoSkip: false,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function convertNilai(text) {
+        if (text === "Sangat Tidak Puas") return 1;
+        if (text === "Tidak Puas") return 2;
+        if (text === "Cukup Puas") return 3;
+        if (text === "Puas") return 4;
+        if (text === "Sangat Puas") return 5;
+        return 0;
+      }
+    </script>
+  </body>
+</html>

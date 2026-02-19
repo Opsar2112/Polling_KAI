@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Polling</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f3f4f6;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 520px;
+        padding: 45px 40px;
+        border-radius: 22px;
+        background: #ffffff;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        text-align: center;
+      }
+
+      .logo-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .logo-group img {
+        height: 50px;
+        object-fit: contain;
+      }
+
+      .divider {
+        width: 2px;
+        height: 35px;
+        background: #ddd;
+      }
+
+      h1 {
+        color: #2f2a78;
+        margin-bottom: 25px;
+      }
+
+      label {
+        font-size: 14px;
+        margin-top: 15px;
+        display: block;
+        text-align: left;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        background: #f37021;
+        color: white;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .success-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+      }
+
+      .question {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+      }
+
+      .radio-group {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: stretch; /* penting supaya tidak center */
+      }
+
+      .radio-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 22px;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        transition: 0.25s;
+        font-size: 15px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .radio-item span {
+        flex: 1;
+        text-align: left;
+      }
+
+      .radio-item input {
+        width: auto; /* penting */
+        padding: 0; /* reset */
+        margin: 0;
+        accent-color: #f37021;
+        transform: scale(1.2);
+        flex-shrink: 0; /* supaya tidak mengecil */
+      }
+
+      .radio-item input {
+        accent-color: #f37021;
+        transform: scale(1.2);
+      }
+
+      .radio-item:hover {
+        border-color: #f37021;
+        background: #fff7f2;
+      }
+
+      .btn-submit {
+        background: #f37021;
+        color: white;
+        padding: 15px;
+        border-radius: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .btn-submit:hover {
+        background: #d95f15;
+        transform: translateY(-2px);
+      }
+
+           .btn-secondary {
+  background: #2f2a78;
+  color: white;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background: #1a1660;
+  transform: translateY(-2px);
+}
+    </style>
+  </head>
+
+  <body>
+    <div class="card" id="loginPage">
+      <div class="logo-group">
+        <img src="kai.png" />
+        <div class="divider"></div>
+        <img src="operation.png" />
+      </div>
+
+      <h1>Login Peserta</h1>
+
+      <label>Nama Peserta</label>
+      <input type="text" id="nama" placeholder="Masukkan Nama" />
+
+      <label>NIPP</label>
+      <input type="number" id="nipp" placeholder="Masukkan NIPP (angka saja)" />
+
+      <label>Nama Diklat</label>
+      <select id="diklat" nama="diklat"></select>
+
+      <label>Kedudukan</label>
+      <select id="kedudukan" nama="kedudukan"></select>
+
+      <button onclick="login()">Masuk</button>
+       <a href="login peserta.html">
+    <button type="button" class="btn-secondary">Kembali</button>
+    </div>
+
+    <div class="card hidden" id="pollPage">
+      <h1></h1>
+      <div class="card" id="loginPage">
+      <div class="logo-group">
+        <img src="kai.png" />
+        <div class="divider"></div>
+        <img src="operation.png" />
+      </div>
+
+      <form id="pollForm">
+        <p class="question"></p>
+
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="variabel1" value="IB" required />
+            <span>Sudah Datang</span>
+          </label>
+
+          <label class="radio-item">
+            <input type="radio" name="variabel1" value="Di Asrama" />
+            <span>Telat</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit">Kirim Polling</button>
+      </form>
+    </div>
+
+    <div class="overlay" id="successOverlay">
+      <div class="success-box">
+        <h2>Berhasil Terkirim</h2>
+        <button onclick="resetApp()">Isi Lagi</button>
+      </div>
+    </div>
+
+    <script>
+      const baseURL = "https://script.google.com/macros/s/AKfycbw9V3-Tno36aDY0QvSOC5bdbpH47Sd8QDBaKBR6RNQXmwNVvrLAi1YposGUm-w5cHL2IA/exec";
+
+      // 🔹 LOAD MASTER DIKLAT
+      fetch(baseURL + "?sheet=diklat")
+        .then((res) => res.json())
+        .then((data) => {
+          const select = document.getElementById("diklat");
+
+          // 🔹 TAMBAHKAN INI
+          let defaultOption = document.createElement("option");
+          defaultOption.value = "";
+          defaultOption.textContent = "-- Pilih Nama Diklat --";
+          defaultOption.disabled = true;
+          defaultOption.selected = true;
+          select.appendChild(defaultOption);
+
+          // 🔹 DATA DARI SHEET
+         data.forEach((item) => {
+  let opt = document.createElement("option");
+  opt.value = item;
+  opt.textContent = item;
+  select.appendChild(opt);
+});
+
+        });
+
+      // 🔹 LOAD MASTER KEDUDUKAN
+      fetch(baseURL + "?sheet=kedudukan")
+  .then((res) => res.json())
+  .then((data) => {
+    const select = document.getElementById("kedudukan");
+
+    let defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "-- Pilih Kedudukan --";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    select.appendChild(defaultOption);
+
+    data.forEach((item) => {
+      let opt = document.createElement("option");
+      opt.value = item;
+      opt.textContent = item;
+      select.appendChild(opt);
+    });
+  });
+
+      function login() {
+        const nama = document.getElementById("nama").value.trim();
+        const nipp = document.getElementById("nipp").value.trim();
+
+        if (!nama || !nipp) {
+          alert("Lengkapi data terlebih dahulu");
+          return;
+        }
+
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("pollPage").classList.remove("hidden");
+      }
+
+      document.getElementById("pollForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const nama = document.getElementById("nama").value;
+        const nipp = document.getElementById("nipp").value;
+        const diklat = document.getElementById("diklat").value;
+        const kedudukan = document.getElementById("kedudukan").value;
+        const pilihan = document.querySelector('input[name="variabel1"]:checked');
+
+        if (!pilihan) {
+          alert("Pilih jawaban terlebih dahulu");
+          return;
+        }
+
+        fetch(baseURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nama: nama,
+            nipp: nipp,
+            diklat: diklat,
+            kedudukan: kedudukan,
+            variabel1: pilihan.value,
+            jenis: "KEHADIRAN",
+          }),
+        }).then(() => {
+          document.getElementById("successOverlay").style.display = "flex";
+        });
+      });
+
+      function resetApp() {
+        document.getElementById("successOverlay").style.display = "none";
+        document.getElementById("pollPage").classList.add("hidden");
+        document.getElementById("loginPage").classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login Administrator - PT KAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --kai-blue: #2f2a78;
+        --kai-orange: #f37021;
+        --bg: #eeeeee;
+        --card: #ffffff;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card {
+        width: 420px; /* lebih kecil */
+        background: var(--card);
+        padding: 50px 40px; /* lebih ringkas */
+        border-radius: 30px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05); /* lebih samar */
+        text-align: center;
+      }
+
+      .logo-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .logo-group img {
+        max-height: 50px; /* diperkecil */
+      }
+
+      .divider {
+        width: 2px;
+        height: 45px;
+        background: #d6d6d6;
+      }
+
+      h2 {
+        font-size: 24px; /* lebih kecil */
+        color: var(--kai-blue);
+        margin-bottom: 30px;
+      }
+
+      /* INPUT */
+      input {
+        width: 75%;
+        padding: 14px;
+        border-radius: 30px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      button {
+        width: 70%;
+        padding: 14px;
+        border-radius: 35px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 10px auto;
+        display: block;
+        transition: 0.3s;
+      }
+
+      .btn-login {
+        background: var(--kai-orange);
+        color: white;
+      }
+
+      .btn-back {
+        background: var(--kai-blue);
+        color: white;
+        box-shadow: 0 10px 20px rgba(47, 42, 120, 0.25);
+      }
+
+      .error {
+        height: 20px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #e53935;
+      }
+
+      .footer {
+        margin-top: 40px;
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      @media (max-width: 768px) {
+        .card {
+          padding: 40px 25px;
+          border-radius: 25px;
+        }
+
+        input,
+        button {
+          width: 100%;
+        }
+
+        h2 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="logo-group">
+        <img src="kai.png" alt="Logo KAI" />
+        <div class="divider"></div>
+        <img src="operation.png" alt="Operation Safety Academy" />
+      </div>
+
+      <h2>Login Administrator</h2>
+
+      <input type="password" id="passwordAdmin" placeholder="Masukkan Password" />
+
+      <button class="btn-login" onclick="loginAdmin()">Login</button>
+      <button class="btn-back" onclick="masukPeserta()">Kembali</button>
+
+      <div id="errorMsg" class="error"></div>
+
+      <div class="footer">Agus Suroto Corporate University</div>
+    </div>
+
+    <script>
+      function loginAdmin() {
+        const password = document.getElementById("passwordAdmin").value.trim();
+        const adminPassword = "KAI2026";
+        const errorBox = document.getElementById("errorMsg");
+
+        errorBox.innerText = "";
+
+        if (password === "") {
+          errorBox.innerText = "Password wajib diisi.";
+          return;
+        }
+
+        if (password === adminPassword) {
+          localStorage.setItem("isAdminLogin", "true");
+          window.location.href = "admin.html";
+        } else {
+          errorBox.innerText = "Password salah!";
+        }
+      }
+
+      function masukPeserta() {
+        window.location.href = "index.html";
+      }
+
+      document.getElementById("passwordAdmin").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          loginAdmin();
+        }
+      });
+    </script>
+  </body>
+</html>
